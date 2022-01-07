@@ -59,6 +59,7 @@ virtualenvs.options.no-pip = false
 virtualenvs.options.no-setuptools = false
 virtualenvs.options.system-site-packages = false
 virtualenvs.path = "{cache-dir}/virtualenvs"  # /path/to/cache/directory/virtualenvs
+virtualenvs.path-independent_naming = null
 virtualenvs.prefer-active-python = false
 virtualenvs.prompt = "{project_name}-py{python_version}"
 ```
@@ -290,6 +291,22 @@ If set to `true`, the virtualenv will be created and expected in a folder named
 `.venv` within the root directory of the project.
 
 If set to `false`, `poetry` will ignore any existing `.venv` directory.
+
+### `virtualenvs.path-independent_naming`
+
+**Type**: boolean
+
+Make virtualenv names independent of project path.
+Defaults to `None`.
+
+If not set explicitly (default) or if set to `false`, virtualenv names created
+by `poetry` include a hash string of the path to the project's folder.
+
+If set to `true`, virtualenv names will not depend on project path. This way,
+it is possible to rename a project's folder or copy it to a different location
+without recreating associated virtualenvs. This may cause conflicts, however,
+if there are several projects with the same package name.
+
 
 ### `virtualenvs.options.always-copy`
 
