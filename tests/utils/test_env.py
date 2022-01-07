@@ -1697,8 +1697,10 @@ def test_generate_env_name_ignores_case_for_case_insensitive_fs(
     poetry: Poetry,
     tmp_path: Path,
 ) -> None:
-    venv_name1 = EnvManager.generate_env_name(poetry.package.name, "MyDiR")
-    venv_name2 = EnvManager.generate_env_name(poetry.package.name, "mYdIr")
+
+    manager = EnvManager(poetry)
+    venv_name1 = manager.generate_env_name(poetry.package.name, "MyDiR")
+    venv_name2 = manager.generate_env_name(poetry.package.name, "mYdIr")
     if sys.platform == "win32":
         assert venv_name1 == venv_name2
     else:
@@ -1835,3 +1837,10 @@ def test_command_from_bin_preserves_relative_path(manager: EnvManager) -> None:
     env = manager.get()
     command = env.get_command_from_bin("./foo.py")
     assert command == ["./foo.py"]
+
+def test_generate_env_name_without_path_hash(manager: EnvManager, config: Config) -> None:
+    config.merge({"virtualenvs": {"path-independent_naming": True}})
+    venv_name = manager.generate_env_name("simple-project", "PathName")
+
+    assert venv_name == "simple-project"
+

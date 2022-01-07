@@ -109,6 +109,7 @@ class Config:
         "virtualenvs": {
             "create": True,
             "in-project": None,
+            "path-independent_naming": None,
             "path": os.path.join("{cache-dir}", "virtualenvs"),
             "options": {
                 "always-copy": False,
@@ -273,6 +274,7 @@ class Config:
         if name in {
             "virtualenvs.create",
             "virtualenvs.in-project",
+            "virtualenvs.path-independent_naming",
             "virtualenvs.options.always-copy",
             "virtualenvs.options.system-site-packages",
             "virtualenvs.options.prefer-active-python",
