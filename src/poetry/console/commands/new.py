@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 
 from contextlib import suppress
+from pathlib import Path
 
 from cleo.helpers import argument
 from cleo.helpers import option
@@ -27,12 +28,9 @@ class NewCommand(Command):
     ]
 
     def handle(self) -> int:
-        from pathlib import Path
-
         from poetry.core.vcs.git import GitConfig
 
         from poetry.layouts import layout
-        from poetry.utils.env import SystemEnv
 
         if self.option("src"):
             layout_cls = layout("src")
@@ -65,8 +63,7 @@ class NewCommand(Command):
             if author_email:
                 author += f" <{author_email}>"
 
-        current_env = SystemEnv(Path(sys.executable))
-        default_python = "^" + ".".join(str(v) for v in current_env.version_info[:2])
+        default_python = self._get_default_python_dependency()
 
         layout_ = layout_cls(
             name,
@@ -88,3 +85,19 @@ class NewCommand(Command):
         )
 
         return 0
+
+    @staticmethod
+    def _get_default_python_dependency() -> str:
+        from poetry.config.config import Config
+        from poetry.utils.env import SystemEnv
+
+        current_env = SystemEnv(Path(sys.executable))
+
+        config = Config.create()
+        prefix: str | None = config.get("default-python-prefix")
+        if prefix is None:
+            prefix = "^"
+
+        default_python = prefix + ".".join(str(v) for v in current_env.version_info[:2])
+
+        return default_python

@@ -981,6 +981,38 @@ build-backend = "setuptools.build_meta"
     assert existing_section in pyproject_file.read_text()
 
 
+def test_python_prefix_config_tilde(tester: CommandTester, poetry: Poetry):
+    poetry.config.config["default-python-prefix"] = "~"
+
+    inputs = [
+        "my-package",  # Package name
+        "1.2.3",  # Version
+        "",  # Description
+        "n",  # Author
+        "",  # License
+        "",  # Python
+        "n",  # Interactive packages
+        "n",  # Interactive dev packages
+        "\n",  # Generate
+    ]
+    tester.execute(inputs="\n".join(inputs))
+
+    python = ".".join(str(c) for c in sys.version_info[:2])
+    expected = f"""\
+[tool.poetry]
+name = "my-package"
+version = "1.2.3"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{{include = "my_package"}}]
+
+[tool.poetry.dependencies]
+python = "~{python}"
+"""
+    assert expected in tester.io.fetch_output()
+
+
 @pytest.mark.parametrize(
     "name",
     [

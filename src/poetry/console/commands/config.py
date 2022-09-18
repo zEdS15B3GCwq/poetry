@@ -121,6 +121,11 @@ To remove a repository (repo is a short alias for repositories):
                 PackageFilterPolicy.normalize,
                 None,
             ),
+            "default-python-prefix": (
+                lambda val: val in {"^", "~"},
+                lambda val: str(val),
+                None,
+            ),
         }
 
         return unique_config_values
