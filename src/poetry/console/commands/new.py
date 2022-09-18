@@ -68,8 +68,13 @@ class NewCommand(Command):
                 author += f" <{author_email}>"
 
         poetry_config = Config.create()
+
+        prefix: str | None = config.get("default-python-prefix")
+        if prefix is None:
+            prefix = "^"
+
         default_python = (
-            "^"
+            prefix
             + EnvManager.get_python_version(
                 precision=2,
                 prefer_active_python=poetry_config.get(

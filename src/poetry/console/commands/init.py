@@ -158,8 +158,13 @@ The <c1>init</c1> command creates a basic <comment>pyproject.toml</> file in the
         python = self.option("python")
         if not python:
             config = Config.create()
+
+            prefix: str | None = config.get("default-python-prefix")
+            if prefix is None:
+                prefix = "^"
+
             default_python = (
-                "^"
+                prefix
                 + EnvManager.get_python_version(
                     precision=2,
                     prefer_active_python=config.get("virtualenvs.prefer-active-python"),

@@ -132,6 +132,7 @@ class Config:
             "max-workers": None,
             "no-binary": None,
         },
+        "default-python-prefix": None,
     }
 
     def __init__(
