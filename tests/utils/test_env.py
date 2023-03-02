@@ -841,7 +841,7 @@ def test_raises_if_acting_on_different_project_by_name(
     config.merge({"virtualenvs": {"path": str(tmp_path)}})
 
     different_venv_name = (
-        EnvManager.generate_env_name(
+        manager.generate_env_name(
             "different-project",
             str(poetry.file.path.parent),
         )
@@ -871,7 +871,7 @@ def test_raises_when_passing_old_env_after_dir_rename(
     # cause any unwanted side effects
     config.merge({"virtualenvs": {"path": str(tmp_path)}})
 
-    previous_venv_name = EnvManager.generate_env_name(
+    previous_venv_name = manager.generate_env_name(
         poetry.package.name,
         "previous_dir_name",
     )
@@ -1708,11 +1708,14 @@ def test_generate_env_name_ignores_case_for_case_insensitive_fs(
 
 
 def test_generate_env_name_uses_real_path(
-    tmp_path: Path, mocker: MockerFixture
+    poetry: Poetry,
+    tmp_path: Path,
+    mocker: MockerFixture
 ) -> None:
     mocker.patch("os.path.realpath", return_value="the_real_dir")
-    venv_name1 = EnvManager.generate_env_name("simple-project", "the_real_dir")
-    venv_name2 = EnvManager.generate_env_name("simple-project", "linked_dir")
+    manager = EnvManager(poetry)
+    venv_name1 = manager.generate_env_name("simple-project", "the_real_dir")
+    venv_name2 = manager.generate_env_name("simple-project", "linked_dir")
     assert venv_name1 == venv_name2
 
 

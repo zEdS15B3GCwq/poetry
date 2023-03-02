@@ -329,6 +329,7 @@ def test_list_must_not_display_sources_from_pyproject_toml(
     cache_dir = json.dumps(str(config_cache_dir))
     venv_path = json.dumps(os.path.join("{cache-dir}", "virtualenvs"))
     expected = f"""cache-dir = {cache_dir}
+default-python-prefix = null
 experimental.system-git-client = false
 installer.max-workers = null
 installer.modern-installation = true
@@ -342,6 +343,7 @@ virtualenvs.options.no-pip = false
 virtualenvs.options.no-setuptools = false
 virtualenvs.options.system-site-packages = false
 virtualenvs.path = {venv_path}  # {config_cache_dir / 'virtualenvs'}
+virtualenvs.path-independent_naming = null
 virtualenvs.prefer-active-python = false
 virtualenvs.prompt = "{{project_name}}-py{{python_version}}"
 """
